@@ -9,8 +9,43 @@ const yargs = require('yargs');
 //user created lib
 const notes = require("./notes");
 
+const titleOptions = {
+    describe:"title of the notes",
+    demand: true,
+    alias:"t"
+}
+
+const bodyOptions = {
+    describe:"body of the notes",
+    demand: true,
+    alias: "b"
+}
+
 const command = process.argv[2];
-const yarg_argv = yargs.argv;
+const yarg_argv = yargs.command(
+    "add", 
+    "Add a new note",
+    {
+        title: titleOptions,
+        body: bodyOptions
+    }
+
+).command(
+    "list",
+    "List all notes"
+).command(
+    "remove",
+    "Remove a note",
+    {
+        title: titleOptions
+    }
+).command(
+    "read",
+    "Read a notes",
+    {
+        title: titleOptions
+    }
+).help().argv;
 debugger;
 console.log("process.argv:", command);
 console.log('yarg argv', yarg_argv);
@@ -20,8 +55,13 @@ if(command === "add"){
 }
 
 else if(command === "list") {
-    notes.getAllNotes();
+    const allNotes = notes.getAllNotes();
+    console.log(`Printing ${allNotes.length} notes(s)`);
+    allNotes.forEach(element => {
+        notes.logNotes(element)
+    }); 
 }
+
 
 else if(command === "remove") {
     const res = notes.deleteNote(yarg_argv.title) 
